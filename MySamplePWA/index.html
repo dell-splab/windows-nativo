@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="shortcut icon" href="https://c.s-microsoft.com/favicon.ico?v2" />
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="converter.css">
+    <title>Test Notification</title>
+  </head>
+  <body>
+    <button type="button" id="push-button" name="push-button">Click Me!</button>
+    <script src="converter.js"></script>
+  </body>
+</html>
+<script>
+    if('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js', { scope: '/' });
+    }
+    </script>

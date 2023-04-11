@@ -7,12 +7,12 @@ import 'package:windows_notification/windows_notification.dart';
 void main() {
   runApp(MaterialApp(
     home: const MyApp(),
-    color: Colors.red,
+    color: Colors.white,
     themeMode: ThemeMode.light,
     theme: ThemeData(
         primaryColor: Colors.white,
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)
-            .copyWith(background: Colors.red)),
+            .copyWith(background: Colors.white)),
   ));
 }
 
