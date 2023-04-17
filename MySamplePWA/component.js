@@ -97,6 +97,11 @@ class ListNotifications extends HTMLElement {
   }
   
   adicionarNotf(notf_body){
+    if(this.$notif_list.children.length === 5){
+      this.$notif_list.removeChild(
+        this.$notif_list.children[4]
+    );
+    }
   	let $notif_div = document.createElement("div")
     $notif_div.setAttribute('class', 'notification')
     $notif_div.setAttribute('priority', this.getAtributoPrioridade(notf_body))
