@@ -21,11 +21,11 @@ let templateContent = `
 }
 
 .notification[priority="priority-0"]{
-	background-color: orange;
+	background-color: CornflowerBlue;
 }
 
 .notification[priority="priority-1"]{
-	background-color: CornflowerBlue;
+	background-color: orange;
 }
 
 .notification[priority="priority-2"]{
@@ -34,7 +34,6 @@ let templateContent = `
 </style>
 
 <div id=container>
-	<button>Disparar notificação</button>
   <div id=notifications-list></div>
 </div>`
 
@@ -48,37 +47,40 @@ class ListNotifications extends HTMLElement {
     this.attachShadow({mode: 'open'})
     this.shadowRoot.appendChild(template.content.cloneNode(true))
     this.$notif_list = this.shadowRoot.querySelector("#notifications-list")
-    this.$disparar_btn = this.shadowRoot.querySelector("button")
-    this.$input = this.shadowRoot.querySelector("#notification-input")
-    
-    this.notifications = [
-    	{
-        "title": "Ligação perdida",
-        "description": "Ligação perdida no sistema xxx",
-        "priority": 2
-      },
-      {
-        "title": "Mensagem de João",
-        "description": "Mensagem recebida às 10 a.m.",
-        "priority": 1
-      },      
-      {
-        "title": "Email de José",
-        "description": "Email recebido no sistema yyy",
-        "priority": 0
-      }
-
-    ]
   }
   
   connectedCallback(){
-    this.notifications.forEach(n => this.adicionarNotf(n))
+    setInterval(this.sendNotification.bind(this), 10000)
     
-    this.$disparar_btn.addEventListener('click', async (_) => {
-    	let notfIndex = Math.floor(Math.random() * (3 - 0) + 0)
-      let notf = this.notifications[notfIndex]
-      this.adicionarNotf(notf)
-    })
+  }
+
+  sendNotification(){
+    const priority = Math.floor(Math.random() * 3);
+    let img = "";
+    let body = "";
+  
+    if (priority === 0) {
+      img = "low-priority.png";
+      body = "Low priority notification";
+    } else if (priority === 1) {
+      img = "danger-sign.png";
+      body = "Medium priority notification";
+    } else if (priority === 2) {
+      img = "priority.png";
+      body = "High priority notification";
+    }
+
+    let notf = {
+      title: "Hello World!",
+      body: body,
+      priority: priority,
+      img: img
+    }
+    this.adicionarNotf(notf)
+    this.dispatchEvent(new CustomEvent("notification", {
+      detail: notf
+    }));
+
   }
   
   getAtributoPrioridade(notf_body){
@@ -103,7 +105,7 @@ class ListNotifications extends HTMLElement {
         <h4>${notf_body.title}</h4>
         <button class="btn">X</button>
       </div>
-      <p>${notf_body.description}</p>`
+      <p>${notf_body.body}</p>`
     
     let $btn_delete_notf =  $notif_div.querySelector(".btn")
     $btn_delete_notf.addEventListener('click', this.callbackDeleteNotf)
