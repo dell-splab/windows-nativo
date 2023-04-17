@@ -1,0 +1,6 @@
+{
+  "start": "npx nodemon converter.js",
+  "dependencies": {
+    "node-schedule": "^2.1.1"
+  }
+}
