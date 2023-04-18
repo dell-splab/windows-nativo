@@ -15,9 +15,13 @@ let templateContent = `
   margin-left: 7px;
 }
 
+.notification div h4 {
+  text-align: center;
+}
+
 .notification p {
-  margin-top: 5px;
-  margin-left: 15px;
+  margin: 0;
+  text-align: center;
 }
 
 .notification[priority="priority-0"]{
@@ -30,6 +34,33 @@ let templateContent = `
 
 .notification[priority="priority-2"]{
 	background-color: IndianRed;
+}
+
+/* Classe para botão azul */
+.btn-blue {
+  background-color: CornflowerBlue;
+  color: white;
+}
+
+/* Classe para botão laranja */
+.btn-orange {
+  background-color: orange;
+  color: white;
+}
+
+/* Classe para botão vermelho */
+.btn-red {
+  background-color: IndianRed;
+  color: white;
+}
+
+/* Estilização básica para o botão */
+.btn {
+  font-size: 18px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>
 
@@ -114,6 +145,16 @@ class ListNotifications extends HTMLElement {
     
     let $btn_delete_notf =  $notif_div.querySelector(".btn")
     $btn_delete_notf.addEventListener('click', this.callbackDeleteNotf)
+
+    // Estilizar botão de fechar
+    $btn_delete_notf.style.backgroundColor = notf_body.priority === "priority-0" ? "CornflowerBlue" : notf_body.priority === "priority-1" ? "orange" : "IndianRed"
+    $btn_delete_notf.style.border = "none"
+    $btn_delete_notf.style.borderRadius = "50%"
+    $btn_delete_notf.style.color = "white"
+    $btn_delete_notf.style.cursor = "pointer"
+    $btn_delete_notf.style.fontWeight = "bold"
+    $btn_delete_notf.style.padding = "5px 10px"
+
   	this.$notif_list.prepend($notif_div)
   }
 	
