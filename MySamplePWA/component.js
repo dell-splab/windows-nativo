@@ -65,20 +65,30 @@ template.innerHTML = templateContent;
 class ListNotifications extends HTMLElement {
   constructor() {
     super();
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot.appendChild(template.content.cloneNode(true));
-    this.$notif_list = this.shadowRoot.querySelector("#notifications-list");
+    this.attachShadow({ mode: "open" })
+    this.shadowRoot.appendChild(template.content.cloneNode(true))
+    this.$notif_list = this.shadowRoot.querySelector("#notifications-list")
     this.$notif_count = this.shadowRoot.querySelector("#notification-count")
+    this.configNotif = {
+      'all-muted-until': "",
+      'muted-by-id-until':{
+          'id': "",
+          'muted-until': ""
+      }
+    }
   }
 
   connectedCallback() {
-    setInterval(this.sendNotification.bind(this), 7000);
+    setInterval(this.sendNotification.bind(this), 7000)
+    document.querySelector('notifications-config').addEventListener(
+      "notificationConfig", (e) => this.configNotif = e.detail)
   }
 
   sendNotification() {
     const priority = Math.floor(Math.random() * 3);
     let img = "";
     let body = "";
+    let id = Math.floor(Math.random() * 2);
 
     if (priority === 0) {
       img = "low-priority.png";
@@ -96,13 +106,31 @@ class ListNotifications extends HTMLElement {
       body: body,
       priority: priority,
       img: img,
+      id: id
     };
     this.adicionarNotf(notf);
+    this.dispatchNotfByConfig(notf)   
+  }
+
+  dispatchNotf(notf){
     this.dispatchEvent(
       new CustomEvent("notification", {
         detail: notf,
       })
     );
+  }
+
+  dispatchNotfByConfig(notf){
+    let date = new Date()
+    let timestampAtual = date.getTime()
+    console.log(notf)
+    if(this.configNotif['all-muted-until'] == "" || this.configNotif['all-muted-until'] < timestampAtual){
+      if(notf.id != this.configNotif['muted-by-id-until']['id']){
+        this.dispatchNotf(notf)
+      } else if(this.configNotif['muted-by-id-until']['muted-until'] < timestampAtual){
+        this.dispatchNotf(notf)
+      }         
+    } 
   }
 
   getAtributoPrioridade(notf_body) {
@@ -127,7 +155,7 @@ class ListNotifications extends HTMLElement {
     $notif_div.setAttribute("priority", this.getAtributoPrioridade(notf_body));
     $notif_div.innerHTML = `
     	<div>
-        <h4>${notf_body.title}</h4>
+        <h4>${notf_body.title} - ID: ${notf_body.id}</h4>
         <button class="btn">X</button>
       </div>
       <p>${notf_body.body}</p>`;
